@@ -1,4 +1,5 @@
 const DOMAIN = 'https://learn.01founders.co/api/graphql-engine/v1/graphql/';
+const responseDataDiv = document.getElementById('response-data');
 // Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
 
 
@@ -45,6 +46,7 @@ async function handleLogin() {
             await useJWT()
         } else {
             // Display an error message or handle unsuccessful login
+            responseDataDiv.textContent = "It didn't work!!"
             console.error("Error during login:", response.statusText);
         }
     } catch (error) {
@@ -107,6 +109,13 @@ const response = await fetch(DOMAIN, {
 });
     
 
-console.log("Response Content:", await response.json());
+const responseData = await response.json();
+
+// Update the content of the response-data div
+
+responseDataDiv.textContent = JSON.stringify(responseData, null, 2);
+ 
+    
+
 
 }
