@@ -1,32 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Pages GraphQL App</title>
+    <link rel="stylesheet" href="graphQL.css">
 </head>
+
 <body>
-    <div id="app">
-        <!-- Your app content goes here -->
-        This is where all the data will go!
-        <br><br>
-        <form id="login-form">
-            username or email
-            <br>
-            <input id="username" class="username" />
-            <br>
-            password
-            <br>
-            <input id="password" class="password" type="password" />
-            <br>
-            <button id="submit" class="submit">submit</button>
-        </form>
-        
-        <!-- New div to display the response data -->
-        <div id="response-data"></div>
+    <div id="pageContainer">
+
+        <header>
+            <div class="header-container">
+                <h1 class="headerTitle">GraphQL!</h1>
+                <div class="subtitles">
+                    <div class="headerTitle subtitle">Incredible!</div>
+                    <div class="headerTitle subtitle">Edible!</div>
+                    <div class="headerTitle subtitle">Wow!</div>
+                </div>
+            </div>
+        </header>
+        <div id="loginContainer">
+            log in with your 01Founders/Gitea details below:
+            <form id="login-form">
+                username or email
+                <br>
+                <input placeholder="Enter username or email address" id="usernameOrEmail" class="loginInput"/>
+                <br>
+                password
+                <br>
+                <input placeholder="Enter password" id="password" class="loginInput" type="password"/>
+                <br>
+                <button id="submit" class="button">submit</button>
+                
+            </form>
+            <button id="logout" class="button">logout</button>
+        </div>
+        <div id="response-data" class="response-data"></div>
     </div>
 
-    <!-- Include your JavaScript file -->
-    <script src="app.js"></script>
+    <script src="graphQL.js"></script>
 </body>
+
 </html>

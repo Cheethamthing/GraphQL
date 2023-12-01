@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function handleLogin() {
-    const username = document.getElementById("username").value;
+    const usernameOrEmail = document.getElementById("usernameOrEmail").value;
     const password = document.getElementById("password").value;
 
     // Base64 encode the credentials for Basic Authentication
-    const authHeader = "Basic " + btoa(`${username}:${password}`);
+    const authHeader = "Basic " + btoa(`${usernameOrEmail}:${password}`);
 
-    console.log("username:", username)
+    console.log("usernameOrEmail:", usernameOrEmail)
     console.log("password:", password)
 
     try {
