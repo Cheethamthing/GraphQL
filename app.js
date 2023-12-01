@@ -1,5 +1,5 @@
 const DOMAIN = 'https://learn.01founders.co/api/graphql-engine/v1/graphql/';
-
+// Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -58,13 +58,55 @@ async function useJWT(){
     const jwtToken = localStorage.getItem("jwt");
 
 // Include the JWT in the headers of your fetch request
-const response = await fetch(`${DOMAIN}api/graphql-engine/v1/graphql`, {
-    method: "GET",
+// const response = await fetch(`${DOMAIN}api/graphql-engine/v1/graphql`, {
+//     method: "GET",
+//     headers: {
+//         Authorization: `Bearer ${jwtToken}`,
+//     },
+// });
+const response = await fetch(DOMAIN, {
+    method: "POST",
     headers: {
         Authorization: `Bearer ${jwtToken}`,
+        "Content-Type": "application/json",
     },
-
-    
+    body: JSON.stringify({
+        query: `
+            query {
+                user {
+                    id
+                    login
+                }
+                transaction {
+                    id
+                    type
+                    amount
+                    userId
+                }
+                progress {
+                    id
+                    userId
+                    objectId
+                    grade
+                }
+                result {
+                    id
+                    objectId
+                    userId
+                    grade
+                }
+                object {
+                    id
+                    name
+                    type
+                    attrs
+                }
+            }
+        `
+    }),
 });
-console.log("response:", response)
+    
+
+console.log("Response Content:", await response.json());
+
 }
