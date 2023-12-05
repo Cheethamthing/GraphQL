@@ -115,6 +115,42 @@ async function useJWT() {
     });
     mainContainer.appendChild(logoutButton);
 
+
+
+    let level = 0;
+    let xpUp = 0;
+    let xpDown = 0;
+
+    // const transactionsDiv = document.createElement("div");
+    // transactionsDiv.classList.add("transactions");
+    responseData.data.transaction.forEach(transaction => {
+        // const transactionsElement = document.createElement("div");
+        // const transactionIdElement = document.createElement("span");
+        // transactionIdElement.textContent = "Transaction ID: " + transaction.id;
+        // transactionsElement.appendChild(transactionIdElement);
+
+        // const transactionsTypeElement = document.createElement("span");
+        // transactionsTypeElement.textContent = "Transaction Type: " + transaction.type;
+        // transactionsElement.appendChild(transactionsTypeElement);
+        if (transaction.type == "level") {
+            level += Number(transaction.amount)
+        } else if (transaction.type == "up") {
+            xpUp += Number(transaction.amount)
+        } else if (transaction.type == "down") {
+            xpDown += Number(transaction.amount)
+        }
+
+        // const transactionsAmountElement = document.createElement("span");
+        // transactionsAmountElement.textContent = "Transaction Amount: " + transaction.amount;
+        // transactionsElement.appendChild(transactionsAmountElement);
+
+        // const transactionsUserIdElement = document.createElement("span");
+        // transactionsUserIdElement.textContent = "Transaction User ID: " + transaction.userId;
+        // transactionsElement.appendChild(transactionsUserIdElement);
+
+        // transactionsDiv.appendChild(transactionsElement);
+    });
+
     const loadedProfile = document.createElement("div")
     loadedProfile.classList.add("loadedProfile")
     mainContainer.appendChild(loadedProfile)
@@ -124,45 +160,13 @@ async function useJWT() {
     username.textContent = responseData.data.user[0].login
     loadedProfile.appendChild(username)
 
-    let level = 0;
-    let xpUp = 0;
-    let xpDown = 0;
+    const auditRatio = document.createElement("div")
+    auditRatio.classList.add("auditRatio")
+    auditRatio.textContent = "Audit Ratio:" + (xpUp / xpDown).toFixed(1)
+    loadedProfile.appendChild(auditRatio)
 
-    const transactionsDiv = document.createElement("div");
-    transactionsDiv.classList.add("transactions");
-    responseData.data.transaction.forEach(transaction => {
-        const transactionsElement = document.createElement("div");
-        const transactionIdElement = document.createElement("span");
-        transactionIdElement.textContent = "Transaction ID: " + transaction.id;
-        transactionsElement.appendChild(transactionIdElement);
-
-        const transactionsTypeElement = document.createElement("span");
-        transactionsTypeElement.textContent = "Transaction Type: " + transaction.type;
-        transactionsElement.appendChild(transactionsTypeElement);
-        if (transaction.type == "level") {
-
-            level += Number(transaction.amount)
-        } else if(transaction.type == "up") {
-            xpUp += Number(transaction.amount)
-
-        }  else if(transaction.type == "down") {
-            xpDown += Number(transaction.amount)
-
-        }
-
-        const transactionsAmountElement = document.createElement("span");
-        transactionsAmountElement.textContent = "Transaction Amount: " + transaction.amount;
-        transactionsElement.appendChild(transactionsAmountElement);
-
-        const transactionsUserIdElement = document.createElement("span");
-        transactionsUserIdElement.textContent = "Transaction User ID: " + transaction.userId;
-        transactionsElement.appendChild(transactionsUserIdElement);
-
-        transactionsDiv.appendChild(transactionsElement);
-    });
-
-    // Append the transactions div to your main container
-    loadedProfile.appendChild(transactionsDiv);
+    // // Append the transactions div to your main container
+    // loadedProfile.appendChild(transactionsDiv);
     console.log("level:", level)
     console.log("xpUp:", xpUp)
     console.log("xpDown:", xpDown)
