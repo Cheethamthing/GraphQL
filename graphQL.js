@@ -133,7 +133,10 @@ async function useJWT() {
         // transactionsTypeElement.textContent = "Transaction Type: " + transaction.type;
         // transactionsElement.appendChild(transactionsTypeElement);
         if (transaction.type == "level") {
-            level += Number(transaction.amount)
+            if (level < transaction.amount) {
+                level = Number(transaction.amount)
+            }
+            
         } else if (transaction.type == "up") {
             xpUp += Number(transaction.amount)
         } else if (transaction.type == "down") {
@@ -155,15 +158,20 @@ async function useJWT() {
     loadedProfile.classList.add("loadedProfile")
     mainContainer.appendChild(loadedProfile)
 
-    const username = document.createElement("div")
-    username.classList.add("username")
-    username.textContent = responseData.data.user[0].login
-    loadedProfile.appendChild(username)
+    const usernameDiv = document.createElement("div")
+    usernameDiv.classList.add("username")
+    usernameDiv.textContent = responseData.data.user[0].login
+    loadedProfile.appendChild(usernameDiv)
 
-    const auditRatio = document.createElement("div")
-    auditRatio.classList.add("auditRatio")
-    auditRatio.textContent = "Audit Ratio:" + (xpUp / xpDown).toFixed(1)
-    loadedProfile.appendChild(auditRatio)
+    const auditRatioDiv = document.createElement("div")
+    auditRatioDiv.classList.add("auditRatio")
+    auditRatioDiv.textContent = "Audit Ratio:" + " " + (xpUp / xpDown).toFixed(1)
+    loadedProfile.appendChild(auditRatioDiv)
+
+    const levelDiv = document.createElement("div")
+    levelDiv.classList.add("level")
+    levelDiv.textContent = "Level:" + " " +  level
+    loadedProfile.appendChild(levelDiv)
 
     // // Append the transactions div to your main container
     // loadedProfile.appendChild(transactionsDiv);
