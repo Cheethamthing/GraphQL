@@ -44,6 +44,13 @@ header {
     width: 100%;
 }
 
+.loadedProfile {
+    background-color: #333;
+    color: #fff; 
+    text-align: center;
+    padding: 20px 0;
+}
+
 .response-data {
     background-color: #333; /* Set your desired header background color */
     color: #fff; /* Set your desired text color */

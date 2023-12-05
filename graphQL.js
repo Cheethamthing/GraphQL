@@ -55,25 +55,18 @@ async function handleLogin() {
     }
 }
 
-async function useJWT(){
+async function useJWT() {
 
     const jwtToken = localStorage.getItem("jwt");
 
-// Include the JWT in the headers of your fetch request
-// const response = await fetch(`${DOMAIN}api/graphql-engine/v1/graphql`, {
-//     method: "GET",
-//     headers: {
-//         Authorization: `Bearer ${jwtToken}`,
-//     },
-// });
-const response = await fetch(DOMAIN, {
-    method: "POST",
-    headers: {
-        Authorization: `Bearer ${jwtToken}`,
-        "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-        query: `
+    const response = await fetch(DOMAIN, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            query: `
             query {
                 user {
                     id
@@ -105,17 +98,83 @@ const response = await fetch(DOMAIN, {
                 }
             }
         `
-    }),
-});
-    
+        }),
+    });
 
-const responseData = await response.json();
 
-// Update the content of the response-data div
+    const responseData = await response.json();
 
-responseDataDiv.textContent = JSON.stringify(responseData, null, 2);
- 
-    
+    const mainContainer = document.getElementById("mainContainer");
+    mainContainer.innerHTML = "";
+
+    const logoutButton = document.createElement("button");
+    logoutButton.classList.add("logoutButton");
+    logoutButton.innerText = "logout";
+    logoutButton.addEventListener("click", function () {
+        window.location.reload();
+    });
+    mainContainer.appendChild(logoutButton);
+
+    const loadedProfile = document.createElement("div")
+    loadedProfile.classList.add("loadedProfile")
+    mainContainer.appendChild(loadedProfile)
+
+    const username = document.createElement("div")
+    username.classList.add("username")
+    username.textContent = responseData.data.user[0].login
+    loadedProfile.appendChild(username)
+
+    let level = 0;
+    let xpUp = 0;
+    let xpDown = 0;
+
+    const transactionsDiv = document.createElement("div");
+    transactionsDiv.classList.add("transactions");
+    responseData.data.transaction.forEach(transaction => {
+        const transactionsElement = document.createElement("div");
+        const transactionIdElement = document.createElement("span");
+        transactionIdElement.textContent = "Transaction ID: " + transaction.id;
+        transactionsElement.appendChild(transactionIdElement);
+
+        const transactionsTypeElement = document.createElement("span");
+        transactionsTypeElement.textContent = "Transaction Type: " + transaction.type;
+        transactionsElement.appendChild(transactionsTypeElement);
+        if (transaction.type == "level") {
+
+            level += Number(transaction.amount)
+        } else if(transaction.type == "up") {
+            xpUp += Number(transaction.amount)
+
+        }  else if(transaction.type == "down") {
+            xpDown += Number(transaction.amount)
+
+        }
+
+        const transactionsAmountElement = document.createElement("span");
+        transactionsAmountElement.textContent = "Transaction Amount: " + transaction.amount;
+        transactionsElement.appendChild(transactionsAmountElement);
+
+        const transactionsUserIdElement = document.createElement("span");
+        transactionsUserIdElement.textContent = "Transaction User ID: " + transaction.userId;
+        transactionsElement.appendChild(transactionsUserIdElement);
+
+        transactionsDiv.appendChild(transactionsElement);
+    });
+
+    // Append the transactions div to your main container
+    loadedProfile.appendChild(transactionsDiv);
+    console.log("level:", level)
+    console.log("xpUp:", xpUp)
+    console.log("xpDown:", xpDown)
+
+
+
+    // Update the content of the response-data div
+
+    responseDataDiv.textContent = JSON.stringify(responseData, null, 2);
+
+
+
 
 
 }
