@@ -1,6 +1,11 @@
 const DOMAIN = 'https://learn.01founders.co/api/graphql-engine/v1/graphql/';
 const responseDataDiv = document.getElementById('response-data');
 // Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
+let level = 0;
+let xpUp = 0;
+let xpDown = 0;
+let justXp = 0;
+let skillsPreviousAmount = -1;
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -107,52 +112,7 @@ async function useJWT() {
     const mainContainer = document.getElementById("mainContainer");
     mainContainer.innerHTML = "";
 
-    const logoutButton = document.createElement("button");
-    logoutButton.classList.add("logoutButton");
-    logoutButton.innerText = "logout";
-    logoutButton.addEventListener("click", function () {
-        window.location.reload();
-    });
-    mainContainer.appendChild(logoutButton);
-
-
-
-    let level = 0;
-    let xpUp = 0;
-    let xpDown = 0;
-
-    // const transactionsDiv = document.createElement("div");
-    // transactionsDiv.classList.add("transactions");
-    responseData.data.transaction.forEach(transaction => {
-        // const transactionsElement = document.createElement("div");
-        // const transactionIdElement = document.createElement("span");
-        // transactionIdElement.textContent = "Transaction ID: " + transaction.id;
-        // transactionsElement.appendChild(transactionIdElement);
-
-        // const transactionsTypeElement = document.createElement("span");
-        // transactionsTypeElement.textContent = "Transaction Type: " + transaction.type;
-        // transactionsElement.appendChild(transactionsTypeElement);
-        if (transaction.type == "level") {
-            if (level < transaction.amount) {
-                level = Number(transaction.amount)
-            }
-            
-        } else if (transaction.type == "up") {
-            xpUp += Number(transaction.amount)
-        } else if (transaction.type == "down") {
-            xpDown += Number(transaction.amount)
-        }
-
-        // const transactionsAmountElement = document.createElement("span");
-        // transactionsAmountElement.textContent = "Transaction Amount: " + transaction.amount;
-        // transactionsElement.appendChild(transactionsAmountElement);
-
-        // const transactionsUserIdElement = document.createElement("span");
-        // transactionsUserIdElement.textContent = "Transaction User ID: " + transaction.userId;
-        // transactionsElement.appendChild(transactionsUserIdElement);
-
-        // transactionsDiv.appendChild(transactionsElement);
-    });
+    addLogoutButtonToContainer(mainContainer)
 
     const loadedProfile = document.createElement("div")
     loadedProfile.classList.add("loadedProfile")
@@ -160,33 +120,105 @@ async function useJWT() {
 
     const usernameDiv = document.createElement("div")
     usernameDiv.classList.add("username")
-    usernameDiv.textContent = responseData.data.user[0].login
     loadedProfile.appendChild(usernameDiv)
 
     const auditRatioDiv = document.createElement("div")
     auditRatioDiv.classList.add("auditRatio")
-    auditRatioDiv.textContent = "Audit Ratio:" + " " + (xpUp / xpDown).toFixed(1)
     loadedProfile.appendChild(auditRatioDiv)
 
     const levelDiv = document.createElement("div")
     levelDiv.classList.add("level")
-    levelDiv.textContent = "Level:" + " " +  level
     loadedProfile.appendChild(levelDiv)
 
-    // // Append the transactions div to your main container
-    // loadedProfile.appendChild(transactionsDiv);
+    const skillsDiv = document.createElement("div");
+    skillsDiv.classList.add("skills");
+    loadedProfile.appendChild(skillsDiv)
+
+    const transactionsDiv = document.createElement("div");
+    transactionsDiv.classList.add("transactions");
+
+
+    responseData.data.transaction.forEach(transaction => {
+        const transactionsElement = document.createElement("div");
+
+        const transactionIdElement = document.createElement("span");
+        transactionIdElement.textContent = "Transaction ID: " + transaction.id;
+        transactionsElement.appendChild(transactionIdElement);
+
+        const transactionsTypeElement = document.createElement("span");
+        transactionsTypeElement.textContent = " Transaction Type: " + transaction.type;
+        transactionsElement.appendChild(transactionsTypeElement);
+
+        const transactionsAmountElement = document.createElement("span");
+        transactionsAmountElement.textContent = " Transaction Amount: " + transaction.amount;
+        transactionsElement.appendChild(transactionsAmountElement);
+
+        transactionsDiv.appendChild(transactionsElement);
+
+        if (transaction.type == "level") {
+            if (level < transaction.amount) {
+                level = Number(transaction.amount)
+            }
+
+        } else if (transaction.type == "up") {
+            xpUp += Number(transaction.amount)
+        } else if (transaction.type == "down") {
+            xpDown += Number(transaction.amount)
+        } else if (transaction.type == "xp") {
+            justXp += Number(transaction.amount)
+        } else if (transaction.type.includes('skill_')) {
+            const skillType = transaction.type.substring('skill_'.length);
+            // Check if the transaction amount is higher than the previous amount for that substring
+            const subDiv = document.createElement("div");
+            if (transaction.amount > skillsPreviousAmount) {
+                subDiv.classList.add("skillType");
+                subDiv.textContent = `${skillType}: ${transaction.amount}`;
+
+                // Append the sub div to the main div
+                skillsDiv.appendChild(subDiv);
+
+                // Update the previous amount
+                skillsPreviousAmount = transaction.amount;
+            }
+        }
+    });
+
+
+    //Username
+    usernameDiv.textContent = responseData.data.user[0].login
+
+    //Audit ratio
+    auditRatioDiv.textContent = "Audit Ratio:" + " " + (xpUp / xpDown).toFixed(1)
+
+    //Level
+    levelDiv.textContent = "Level:" + " " + level
+
+    //Transactions
+    loadedProfile.appendChild(transactionsDiv);
+
+    //Skills
+
+
+
     console.log("level:", level)
     console.log("xpUp:", xpUp)
     console.log("xpDown:", xpDown)
+    console.log("justXp:", justXp)
 
 
 
     // Update the content of the response-data div
-
     responseDataDiv.textContent = JSON.stringify(responseData, null, 2);
 
+}
 
-
-
-
+// adds a logout button to the.... 
+function addLogoutButtonToContainer(container) {
+    const logoutButton = document.createElement("button");
+    logoutButton.classList.add("logoutButton");
+    logoutButton.innerText = "logout";
+    logoutButton.addEventListener("click", function () {
+        window.location.reload();
+    });
+    container.appendChild(logoutButton);
 }
