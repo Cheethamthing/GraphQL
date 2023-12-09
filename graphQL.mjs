@@ -1,12 +1,13 @@
-const DOMAIN = 'https://learn.01founders.co/api/graphql-engine/v1/graphql/';
+import { createHTMLElements } from "./HTMLElements.mjs"; import { getUsername } from "./username.mjs";
+
+export const DOMAIN = 'https://learn.01founders.co/api/graphql-engine/v1/graphql/';
 const responseDataDiv = document.getElementById('response-data');
 // Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
 let level = 0;
 let xpUp = 0;
 let xpDown = 0;
 let justXp = 0;
-let skillsPreviousAmount = -1;
-
+const skillAmounts = new Map()
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
@@ -48,19 +49,21 @@ async function handleLogin() {
             // Save the JWT to localStorage for future use
             localStorage.setItem("jwt", jwtData);
 
-            await useJWT()
+            await createHTMLElements()
+            //simple query
+            await getUsername()
+            await processTransactions()
         } else {
             // Display an error message or handle unsuccessful login
             responseDataDiv.textContent = "It didn't work!!"
             console.error("Error during login:", response.statusText);
         }
     } catch (error) {
-        // Handle errors that occur during the fetch
         console.error("Error during login:", error);
     }
 }
 
-async function useJWT() {
+async function processTransactions() {
 
     const jwtToken = localStorage.getItem("jwt");
 
@@ -109,35 +112,6 @@ async function useJWT() {
 
     const responseData = await response.json();
 
-    const mainContainer = document.getElementById("mainContainer");
-    mainContainer.innerHTML = "";
-
-    addLogoutButtonToContainer(mainContainer)
-
-    const loadedProfile = document.createElement("div")
-    loadedProfile.classList.add("loadedProfile")
-    mainContainer.appendChild(loadedProfile)
-
-    const usernameDiv = document.createElement("div")
-    usernameDiv.classList.add("username")
-    loadedProfile.appendChild(usernameDiv)
-
-    const auditRatioDiv = document.createElement("div")
-    auditRatioDiv.classList.add("auditRatio")
-    loadedProfile.appendChild(auditRatioDiv)
-
-    const levelDiv = document.createElement("div")
-    levelDiv.classList.add("level")
-    loadedProfile.appendChild(levelDiv)
-
-    const skillsDiv = document.createElement("div");
-    skillsDiv.classList.add("skills");
-    loadedProfile.appendChild(skillsDiv)
-
-    const transactionsDiv = document.createElement("div");
-    transactionsDiv.classList.add("transactions");
-
-
     responseData.data.transaction.forEach(transaction => {
         const transactionsElement = document.createElement("div");
 
@@ -153,6 +127,7 @@ async function useJWT() {
         transactionsAmountElement.textContent = " Transaction Amount: " + transaction.amount;
         transactionsElement.appendChild(transactionsAmountElement);
 
+        const transactionsDiv = document.getElementsByClassName("transactions")[0]
         transactionsDiv.appendChild(transactionsElement);
 
         if (transaction.type == "level") {
@@ -168,24 +143,19 @@ async function useJWT() {
             justXp += Number(transaction.amount)
         } else if (transaction.type.includes('skill_')) {
             const skillType = transaction.type.substring('skill_'.length);
-            // Check if the transaction amount is higher than the previous amount for that substring
-            const subDiv = document.createElement("div");
-            if (transaction.amount > skillsPreviousAmount) {
-                subDiv.classList.add("skillType");
-                subDiv.textContent = `${skillType}: ${transaction.amount}`;
 
-                // Append the sub div to the main div
-                skillsDiv.appendChild(subDiv);
+            let currentSkillAmount = skillAmounts.get(skillType)
 
-                // Update the previous amount
-                skillsPreviousAmount = transaction.amount;
+            if (currentSkillAmount !== undefined) {
+                if (transaction.amount > currentSkillAmount) {
+                    skillAmounts.set(skillType, transaction.amount);
+                }
+            } else {
+                skillAmounts.set(skillType, transaction.amount)
             }
         }
-    });
-
-
-    //Username
-    usernameDiv.textContent = responseData.data.user[0].login
+    }
+    );
 
     //Audit ratio
     auditRatioDiv.textContent = "Audit Ratio:" + " " + (xpUp / xpDown).toFixed(1)
@@ -193,11 +163,14 @@ async function useJWT() {
     //Level
     levelDiv.textContent = "Level:" + " " + level
 
-    //Transactions
-    loadedProfile.appendChild(transactionsDiv);
-
     //Skills
-
+    for (const [skillType, transactionAmount] of skillAmounts) {
+        // Create a div for each skillType and add the transaction amount to it
+        const subDiv = document.createElement("div");
+        subDiv.classList.add(skillType);
+        subDiv.textContent = `Skill: ${skillType}: ${transactionAmount}`;
+        skillsDiv.appendChild(subDiv);
+    }
 
 
     console.log("level:", level)
@@ -212,13 +185,3 @@ async function useJWT() {
 
 }
 
-// adds a logout button to the.... 
-function addLogoutButtonToContainer(container) {
-    const logoutButton = document.createElement("button");
-    logoutButton.classList.add("logoutButton");
-    logoutButton.innerText = "logout";
-    logoutButton.addEventListener("click", function () {
-        window.location.reload();
-    });
-    container.appendChild(logoutButton);
-}
