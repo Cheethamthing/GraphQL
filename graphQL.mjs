@@ -158,12 +158,15 @@ async function processTransactions() {
     );
 
     //Audit ratio
+    const auditRatioDiv = document.getElementsByClassName("auditRatio")[0]
     auditRatioDiv.textContent = "Audit Ratio:" + " " + (xpUp / xpDown).toFixed(1)
 
     //Level
+    const levelDiv = document.getElementsByClassName("level")[0]
     levelDiv.textContent = "Level:" + " " + level
 
     //Skills
+    const skillsDiv = document.getElementsByClassName("skills")[0]
     for (const [skillType, transactionAmount] of skillAmounts) {
         // Create a div for each skillType and add the transaction amount to it
         const subDiv = document.createElement("div");
