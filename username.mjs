@@ -16,8 +16,8 @@ export async function getUsername() {
     });
 
     const responseData = await response.json();
-    const username = responseData.data.user[0].login;  // Extract username from response
-    // Update the content of the usernameDiv
+    const username = responseData.data.user[0].login;  
+    
     const usernameDiv = document.querySelector(".username");
     if (usernameDiv) {
         usernameDiv.textContent = `Username: ${username}`;

@@ -1,4 +1,6 @@
-import { createHTMLElements } from "./HTMLElements.mjs"; import { getUsername } from "./username.mjs";
+import { createHTMLElements } from "./HTMLElements.mjs";
+import { getUsername } from "./username.mjs";
+import { getAuditRatio } from "./auditRatio.mjs";
 
 export const DOMAIN = 'https://learn.01founders.co/api/graphql-engine/v1/graphql/';
 const responseDataDiv = document.getElementById('response-data');
@@ -52,6 +54,7 @@ async function handleLogin() {
             await createHTMLElements()
             //simple query
             await getUsername()
+            await getAuditRatio()
             await processTransactions()
         } else {
             // Display an error message or handle unsuccessful login
@@ -135,10 +138,10 @@ async function processTransactions() {
                 level = Number(transaction.amount)
             }
 
-        } else if (transaction.type == "up") {
-            xpUp += Number(transaction.amount)
-        } else if (transaction.type == "down") {
-            xpDown += Number(transaction.amount)
+            // } else if (transaction.type == "up") {
+            //     xpUp += Number(transaction.amount)
+            // } else if (transaction.type == "down") {
+            //     xpDown += Number(transaction.amount)
         } else if (transaction.type == "xp") {
             justXp += Number(transaction.amount)
         } else if (transaction.type.includes('skill_')) {
@@ -157,9 +160,6 @@ async function processTransactions() {
     }
     );
 
-    //Audit ratio
-    const auditRatioDiv = document.getElementsByClassName("auditRatio")[0]
-    auditRatioDiv.textContent = "Audit Ratio:" + " " + (xpUp / xpDown).toFixed(1)
 
     //Level
     const levelDiv = document.getElementsByClassName("level")[0]
