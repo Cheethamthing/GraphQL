@@ -51,6 +51,15 @@ header {
     padding: 20px 0;
 }
 
+.technicalSkills {
+    width: 50%; display: inline-block;
+}
+
+.technologies {
+    width: 50%; display: inline-block;
+}
+
+
 .response-data {
     background-color: #333; /* Set your desired header background color */
     color: #fff; /* Set your desired text color */

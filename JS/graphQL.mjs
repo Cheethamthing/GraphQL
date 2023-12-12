@@ -1,15 +1,15 @@
-import { createHTMLElements } from "./HTMLElements.mjs";
-import { getUsername } from "./username.mjs";
-import { getAuditRatio } from "./auditRatio.mjs";
+import { createHTMLElements } from "./Functions/HTMLElements.mjs";
+import { UseJWT } from "./Functions/useJWT.mjs";
+import { getUsername } from "./Functions/username.mjs";
+import { getAuditRatio } from "./Functions/auditRatio.mjs";
+import { getSkills } from "./Functions/skills.mjs";
+import { usernameQuery, auditUpQuery, auditDownQuery, skillsQuery, transactionQuery } from "./Functions/queries.mjs";
 
-export const DOMAIN = 'https://learn.01founders.co/api/graphql-engine/v1/graphql/';
+
 const responseDataDiv = document.getElementById('response-data');
 // Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
 let level = 0;
-let xpUp = 0;
-let xpDown = 0;
 let justXp = 0;
-const skillAmounts = new Map()
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function handleLogin() {
+    console.log("hello")
     const usernameOrEmail = document.getElementById("usernameOrEmail").value;
     const password = document.getElementById("password").value;
 
@@ -40,12 +41,10 @@ async function handleLogin() {
             },
         });
 
-        // Check if the request was successful (status code 2xx)
-        if (response.ok) {
-            // Parse the response JSON to get the JWT data
-            const jwtData = await response.json();
 
-            // Log the JWT data to the console (you might want to handle it differently)
+        if (response.ok) {
+
+            const jwtData = await response.json();
             console.log("JWT Data:", jwtData);
 
             // Save the JWT to localStorage for future use
@@ -53,9 +52,12 @@ async function handleLogin() {
 
             await createHTMLElements()
             //simple query
-            await getUsername()
-            await getAuditRatio()
-            await processTransactions()
+            await getUsername(usernameQuery)
+            // arguments queries
+            await getAuditRatio(auditUpQuery, auditDownQuery)
+            // arguments query
+            await getSkills(skillsQuery)
+            await processTransactions(transactionQuery)
         } else {
             // Display an error message or handle unsuccessful login
             responseDataDiv.textContent = "It didn't work!!"
@@ -66,54 +68,9 @@ async function handleLogin() {
     }
 }
 
-async function processTransactions() {
+async function processTransactions(transactionQuery) {
 
-    const jwtToken = localStorage.getItem("jwt");
-
-    const response = await fetch(DOMAIN, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            query: `
-            query {
-                user {
-                    id
-                    login
-                }
-                transaction {
-                    id
-                    type
-                    amount
-                    userId
-                }
-                progress {
-                    id
-                    userId
-                    objectId
-                    grade
-                }
-                result {
-                    id
-                    objectId
-                    userId
-                    grade
-                }
-                object {
-                    id
-                    name
-                    type
-                    attrs
-                }
-            }
-        `
-        }),
-    });
-
-
-    const responseData = await response.json();
+    const responseData = await UseJWT(transactionQuery)
 
     responseData.data.transaction.forEach(transaction => {
         const transactionsElement = document.createElement("div");
@@ -130,6 +87,10 @@ async function processTransactions() {
         transactionsAmountElement.textContent = " Transaction Amount: " + transaction.amount;
         transactionsElement.appendChild(transactionsAmountElement);
 
+        const transactionsPathElement = document.createElement("span");
+        transactionsPathElement.textContent = " Transaction Path: " + transaction.path;
+        transactionsElement.appendChild(transactionsPathElement);
+
         const transactionsDiv = document.getElementsByClassName("transactions")[0]
         transactionsDiv.appendChild(transactionsElement);
 
@@ -138,24 +99,8 @@ async function processTransactions() {
                 level = Number(transaction.amount)
             }
 
-            // } else if (transaction.type == "up") {
-            //     xpUp += Number(transaction.amount)
-            // } else if (transaction.type == "down") {
-            //     xpDown += Number(transaction.amount)
         } else if (transaction.type == "xp") {
             justXp += Number(transaction.amount)
-        } else if (transaction.type.includes('skill_')) {
-            const skillType = transaction.type.substring('skill_'.length);
-
-            let currentSkillAmount = skillAmounts.get(skillType)
-
-            if (currentSkillAmount !== undefined) {
-                if (transaction.amount > currentSkillAmount) {
-                    skillAmounts.set(skillType, transaction.amount);
-                }
-            } else {
-                skillAmounts.set(skillType, transaction.amount)
-            }
         }
     }
     );
@@ -166,19 +111,10 @@ async function processTransactions() {
     levelDiv.textContent = "Level:" + " " + level
 
     //Skills
-    const skillsDiv = document.getElementsByClassName("skills")[0]
-    for (const [skillType, transactionAmount] of skillAmounts) {
-        // Create a div for each skillType and add the transaction amount to it
-        const subDiv = document.createElement("div");
-        subDiv.classList.add(skillType);
-        subDiv.textContent = `Skill: ${skillType}: ${transactionAmount}`;
-        skillsDiv.appendChild(subDiv);
-    }
+    
 
 
     console.log("level:", level)
-    console.log("xpUp:", xpUp)
-    console.log("xpDown:", xpDown)
     console.log("justXp:", justXp)
 
 
