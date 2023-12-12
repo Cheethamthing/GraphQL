@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function handleLogin() {
-    console.log("hello")
+
     const usernameOrEmail = document.getElementById("usernameOrEmail").value;
     const password = document.getElementById("password").value;
 
@@ -32,7 +32,6 @@ async function handleLogin() {
     console.log("password:", password)
 
     try {
-        // Make a POST request to the authentication endpoint
         const response = await fetch("https://learn.01founders.co/api/auth/signin", {
             method: "POST",
             headers: {

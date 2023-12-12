@@ -51,9 +51,25 @@ header {
     padding: 20px 0;
 }
 
-.technicalSkills {
-    width: 50%; display: inline-block;
+.skills {
+    min-height: 300px;
+    min-width: 50%;
+    margin: 0 auto;
 }
+
+
+.technicalSkills {
+    min-height: 300px;
+    min-width: 50%;
+    margin: 0 auto;
+    position: relative; /* Add this line */
+}
+
+.technicalSkillsChart {
+    width: 100%; /* Adjust as needed */
+    height: 100%; /* Adjust as needed */
+}
+
 
 .technologies {
     width: 50%; display: inline-block;
