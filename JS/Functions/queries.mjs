@@ -1,14 +1,21 @@
-// simple query
+// nested query
 export const usernameQuery = `
 query {
     user {
         login
-    }
+    } result {
+        id
+        user {
+          id
+          login
+        }
+      }
+    
 }
 `
 
 
-// arguments queries
+// arguments query
 export const auditUpQuery = `
 query {
     transaction(where: { type: { _eq: "up" } }) {
@@ -20,6 +27,7 @@ query {
 }
 `
 
+// arguments query
 export const auditDownQuery =
     `
 query {
@@ -37,6 +45,19 @@ export const skillsQuery =
     `
     query {
         transaction {
+          id
+          type
+          amount
+          userId
+        }
+      }   
+`
+
+// simple query, that also uses an argument
+export const levelQuery =
+    `
+    query {
+        transaction(where: { type: { _eq: "level" } }) {
           id
           type
           amount

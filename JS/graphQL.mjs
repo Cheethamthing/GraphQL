@@ -2,13 +2,13 @@ import { createHTMLElements } from "./Functions/HTMLElements.mjs";
 import { UseJWT } from "./Functions/useJWT.mjs";
 import { getUsername } from "./Functions/username.mjs";
 import { getAuditRatio } from "./Functions/auditRatio.mjs";
+import { getLevel } from "./Functions/level.mjs";
 import { getSkills } from "./Functions/skills.mjs";
-import { usernameQuery, auditUpQuery, auditDownQuery, skillsQuery, transactionQuery } from "./Functions/queries.mjs";
+import { usernameQuery, auditUpQuery, auditDownQuery, levelQuery, skillsQuery, transactionQuery } from "./Functions/queries.mjs";
 
 
 const responseDataDiv = document.getElementById('response-data');
 // Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
-let level = 0;
 let justXp = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -50,11 +50,13 @@ async function handleLogin() {
             localStorage.setItem("jwt", jwtData);
 
             await createHTMLElements()
-            //simple query
+            //nested query
             await getUsername(usernameQuery)
             // arguments queries
             await getAuditRatio(auditUpQuery, auditDownQuery)
-            // arguments query
+            // simple query
+            await getLevel(levelQuery)
+            // simple query
             await getSkills(skillsQuery)
             await processTransactions(transactionQuery)
         } else {
@@ -93,28 +95,17 @@ async function processTransactions(transactionQuery) {
         const transactionsDiv = document.getElementsByClassName("transactions")[0]
         transactionsDiv.appendChild(transactionsElement);
 
-        if (transaction.type == "level") {
-            if (level < transaction.amount) {
-                level = Number(transaction.amount)
-            }
+        
 
-        } else if (transaction.type == "xp") {
+        if (transaction.type == "xp") {
             justXp += Number(transaction.amount)
         }
     }
     );
 
 
-    //Level
-    const levelDiv = document.getElementsByClassName("level")[0]
-    levelDiv.textContent = "Level:" + " " + level
-
-    //Skills
     
 
-
-    console.log("level:", level)
-    console.log("justXp:", justXp)
 
 
 

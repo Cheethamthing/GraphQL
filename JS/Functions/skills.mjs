@@ -62,7 +62,7 @@ function createBarChart(skillAmounts) {
     const height = 200;
 
     // Calculate bar width based on data length
-    const barWidth = width / data.labels.length;
+    const barWidth = 25;
 
     // Calculate the maximum value for scaling
     const maxValue = Math.max(...data.values);
@@ -90,12 +90,13 @@ function createBarChart(skillAmounts) {
         // Add labels inside the bars
         const label = document.createElement('div');
         label.style.position = 'absolute';
-        label.style.left = '72%';
-        label.style.bottom = '95%';
-        label.style.transform = 'translate(-50%, 50%) rotate(-90deg)'; // Rotate the text vertically and center it
-        label.style.transformOrigin = 'bottom center'; // Set the rotation origin
+        label.style.left = '10';
+        label.style.bottom = '95';
+        // label.style.transform = 'translate(-50%, 50%) rotate(-90deg)'; // Rotate the text vertically and center it
+        // label.style.transformOrigin = 'bottom center'; // Set the rotation origin
         label.style.textAlign = 'center';
-        label.textContent = data.labels[i] + ":" + data.values[i];
+        label.textContent = data.labels[i] 
+        // + ":" + data.values[i];
         rect.appendChild(label);
     }
 }
