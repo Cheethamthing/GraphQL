@@ -3,36 +3,57 @@ import { UseJWT } from "./useJWT.mjs";
 export async function getSkills(skillsQuery) {
     try {
         const responseData = await UseJWT(skillsQuery);
-        const skillAmounts = processTransactions(responseData.data.transaction);
+        const [technicalSkillsData, technologiesData] = processTransactions(responseData.data.transaction);
 
         // renderSkills(skillAmounts);
-        createBarChart(skillAmounts)
+        createBarChart(technicalSkillsData, "technicalSkillsData")
+        createBarChart(technologiesData, "technologiesData")
     } catch (error) {
         console.error("Error fetching skills:", error);
     }
 }
 
 function processTransactions(transactions) {
-    const skillAmounts = new Map();
+    const technicalSkills = new Map();
+    const technologies = new Map();
+    let currentSkillAmount = undefined;
 
     transactions.forEach(singleTransaction => {
         if (singleTransaction.type.indexOf("skill_") !== -1) {
             const skillType = singleTransaction.type.substring('skill_'.length);
-            let currentSkillAmount = skillAmounts.get(skillType);
-
-            if (currentSkillAmount !== undefined) {
-                if (singleTransaction.amount > currentSkillAmount) {
-                    skillAmounts.set(skillType, singleTransaction.amount);
+            if (skillType === "prog"
+                || skillType === "algo"
+                || skillType === "sys-admin"
+                || skillType === "front-end"
+                || skillType === "back-end"
+                || skillType === "stats"
+                || skillType === "game") {
+                currentSkillAmount = technicalSkills.get(skillType);
+                if (currentSkillAmount !== undefined) {
+                    if (singleTransaction.amount > currentSkillAmount) {
+                        technicalSkills.set(skillType, singleTransaction.amount);
+                    }
+                } else {
+                    technicalSkills.set(skillType, singleTransaction.amount);
                 }
             } else {
-                skillAmounts.set(skillType, singleTransaction.amount);
+                currentSkillAmount = technologies.get(skillType);
+                if (currentSkillAmount !== undefined) {
+                    if (singleTransaction.amount > currentSkillAmount) {
+                        technologies.set(skillType, singleTransaction.amount);
+                    }
+                } else {
+                    technologies.set(skillType, singleTransaction.amount);
+                }
             }
         }
     });
 
-    return skillAmounts;
+    return [technicalSkills, technologies];
+
 }
 
+// writes out the skills and their numbers
 // function renderSkills(skillAmounts) {
 //     const skillsDiv = document.querySelector(".skills");
 
@@ -47,16 +68,24 @@ function processTransactions(transactions) {
 
 // }
 
-function createBarChart(skillAmounts) {
+function createBarChart(skillAmounts, dataName) {
+    let svg = undefined
+    let containerWidth = undefined
     const data = {
         labels: Array.from(skillAmounts.keys()),
         values: Array.from(skillAmounts.values())
     };
 
-    const svg = document.querySelector(".technicalSkillsChart");
+    if (dataName == "technicalSkillsData") {
+        svg = document.querySelector(".technicalSkillsChart");
+         containerWidth = svg.clientWidth || window.innerWidth;
+    } else if (dataName == "technologiesData") {
+        svg = document.querySelector(".technologiesChart")
+         containerWidth = (svg.clientWidth || window.innerWidth) + 500;
+    }
 
     // Dynamically calculate the container width
-    const containerWidth = svg.clientWidth || window.innerWidth;
+    // const containerWidth = svg.clientWidth || window.innerWidth;
 
     const width = 400;
     const height = 200;
@@ -83,21 +112,33 @@ function createBarChart(skillAmounts) {
         rect.style.width = barWidth + 'px';
         rect.style.height = (data.values[i] / maxValue) * height + 'px';
         rect.style.backgroundColor = '#01FF70';
-        rect.style.overflow = 'hidden'; // Hide overflow to keep the label inside the bar
+        // rect.style.overflow = 'hidden'; // Hide overflow to keep the label inside the bar
 
         svg.appendChild(rect);
 
         // Add labels inside the bars
         const label = document.createElement('div');
         label.style.position = 'absolute';
-        label.style.left = '10';
-        label.style.bottom = '95';
-        // label.style.transform = 'translate(-50%, 50%) rotate(-90deg)'; // Rotate the text vertically and center it
-        // label.style.transformOrigin = 'bottom center'; // Set the rotation origin
+        label.style.left = '90%';
+        label.style.bottom = '90%';
+        label.style.transform = 'translate(-50%, 50%) rotate(-90deg)'; // Rotate the text vertically and center it
+        label.style.transformOrigin = 'bottom center'; // Set the rotation origin
         label.style.textAlign = 'center';
-        label.textContent = data.labels[i] 
+        label.textContent = data.labels[i]
         // + ":" + data.values[i];
         rect.appendChild(label);
+
+        const values = document.createElement('div');
+        values.classList.add("graphValues")
+        values.style.position = 'absolute';
+        values.style.left = '90%';
+        values.style.bottom = '12%';
+        values.style.transform = 'translate(-50%, 50%) rotate(-90deg)'; // Rotate the text vertically and center it
+        values.style.transformOrigin = 'bottom center'; // Set the rotation origin
+        values.style.textAlign = 'center';
+        values.textContent = data.values[i]
+        // + ":" + data.values[i];
+        rect.appendChild(values);
     }
 }
 

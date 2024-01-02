@@ -28,8 +28,6 @@ async function handleLogin() {
     // Base64 encode the credentials for Basic Authentication
     const authHeader = "Basic " + btoa(`${usernameOrEmail}:${password}`);
 
-    console.log("usernameOrEmail:", usernameOrEmail)
-    console.log("password:", password)
 
     try {
         const response = await fetch("https://learn.01founders.co/api/auth/signin", {
@@ -44,8 +42,6 @@ async function handleLogin() {
         if (response.ok) {
 
             const jwtData = await response.json();
-            console.log("JWT Data:", jwtData);
-
             // Save the JWT to localStorage for future use
             localStorage.setItem("jwt", jwtData);
 

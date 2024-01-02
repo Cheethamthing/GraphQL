@@ -75,6 +75,10 @@ header {
     width: 50%; display: inline-block;
 }
 
+.graphvalues{
+  z-index: 9991;
+}
+
 
 .response-data {
     background-color: #333; /* Set your desired header background color */
