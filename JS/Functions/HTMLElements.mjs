@@ -24,15 +24,7 @@ export async function createHTMLElements() {
     skillsDiv.classList.add("skills");
     createBarChartsDivs(skillsDiv)
     loadedProfile.appendChild(skillsDiv)
-
-    const transactionsDiv = document.createElement("div");
-    transactionsDiv.classList.add("transactions");
-    loadedProfile.appendChild(transactionsDiv);
 }
-
-
-
-
 
 // adds a logout button to the.... 
 function addLogoutButtonToContainer(container) {

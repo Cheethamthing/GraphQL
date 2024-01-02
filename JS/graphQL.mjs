@@ -54,7 +54,7 @@ async function handleLogin() {
             await getLevel(levelQuery)
             // simple query
             await getSkills(skillsQuery)
-            await processTransactions(transactionQuery)
+            // await processTransactions(transactionQuery)
         } else {
             // Display an error message or handle unsuccessful login
             responseDataDiv.textContent = "It didn't work!!"
