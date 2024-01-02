@@ -70,6 +70,7 @@ function processTransactions(transactions) {
 
 function createBarChart(skillAmounts, dataName) {
     let svgParentContainer = undefined
+    let bottomPosition = undefined
     let svg = undefined
     let containerWidth = undefined
 
@@ -80,14 +81,15 @@ function createBarChart(skillAmounts, dataName) {
 
     if (dataName == "technicalSkillsData") {
         svgParentContainer = document.querySelector('.technicalSkills');
+        bottomPosition = svgParentContainer.getBoundingClientRect().bottom;
         svg = document.querySelector(".technicalSkillsChart");
         containerWidth = (window.innerWidth * 0.25);
 
     } else if (dataName == "technologiesData") {
         svgParentContainer = document.querySelector('.technologies');
+        bottomPosition = svgParentContainer.getBoundingClientRect().bottom;
         svg = document.querySelector(".technologiesChart")
         containerWidth = (window.innerWidth * 0.75);
-
     }
 
     const height = 200;
@@ -112,18 +114,18 @@ function createBarChart(skillAmounts, dataName) {
         rect.style.width = barWidth + 'px';
         rect.style.height = (data.values[i] / maxValue) * height + 'px';
         rect.style.backgroundColor = '#01FF70';
-        // rect.style.overflow = 'hidden'; // Hide overflow to keep the label inside the bar
 
         svg.appendChild(rect);
 
         // Add labels inside the bars
         const label = document.createElement('div');
         label.style.position = 'absolute';
-        label.style.left = '90%';
-        label.style.bottom = '0%';
-        label.style.transform = 'translate(-50%, 50%) rotate(-90deg)'; // Rotate the text vertically and center it
+        label.style.left = '25%';
+        label.style.top = '100%';
+        label.style.transform = 'translate(-50%, 50%) rotate(-45deg)'; // Rotate the text vertically and center it
         label.style.transformOrigin = 'bottom center'; // Set the rotation origin
         label.style.textAlign = 'center';
+        label.style.whiteSpace = 'nowrap';
         label.textContent = data.labels[i]
         // + ":" + data.values[i];
         rect.appendChild(label);
@@ -131,13 +133,12 @@ function createBarChart(skillAmounts, dataName) {
         const values = document.createElement('div');
         values.classList.add("graphValues")
         values.style.position = 'absolute';
-        values.style.left = '20%';
+        values.style.left = '10%';
         values.style.bottom = '110%';
-        // values.style.transform = 'translate(-50%, 50%) rotate(-90deg)'; // Rotate the text vertically and center it
         values.style.transformOrigin = 'bottom center'; // Set the rotation origin
         values.style.textAlign = 'center';
-        values.textContent = data.values[i]
-        // + ":" + data.values[i];
+        values.textContent = data.values[i] + '%'
+      
         rect.appendChild(values);
     }
 }
