@@ -32,6 +32,7 @@ function addLogoutButtonToContainer(container) {
     logoutButton.classList.add("logoutButton");
     logoutButton.innerText = "logout";
     logoutButton.addEventListener("click", function () {
+        localStorage.removeItem("jwt")
         window.location.reload();
     });
     container.appendChild(logoutButton);
