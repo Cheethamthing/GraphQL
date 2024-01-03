@@ -116,7 +116,7 @@ function createBarChart(skillAmounts, dataName) {
 
         const barHeight = (data.values[i] / maxValue) * chartHeight;
 
-        const x = (i * barWidth);
+        const x = (i * barWidth) + (chartWidth / 2 - (data.labels.length * barWidth) / 2) ;
         const y = ((chartHeight * 0.75) - barHeight);
 
         // Create rect element
