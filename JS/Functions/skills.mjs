@@ -69,10 +69,13 @@ function processTransactions(transactions) {
 // }
 
 function createBarChart(skillAmounts, dataName) {
-    let svgParentContainer = undefined
-    let bottomPosition = undefined
-    let svg = undefined
-    let containerWidth = undefined
+
+    const technicalSkillsElement = document.querySelector('.technicalSkills');
+    const technicalSkillsWidth = technicalSkillsElement.offsetWidth;
+
+    let svgContainer = undefined;
+    let SVGTitle = undefined
+    let containerWidth = technicalSkillsWidth
 
     const data = {
         labels: Array.from(skillAmounts.keys()),
@@ -80,67 +83,72 @@ function createBarChart(skillAmounts, dataName) {
     };
 
     if (dataName == "technicalSkillsData") {
-        svgParentContainer = document.querySelector('.technicalSkills');
-        bottomPosition = svgParentContainer.getBoundingClientRect().bottom;
-        svg = document.querySelector(".technicalSkillsChart");
-        containerWidth = (window.innerWidth * 0.25);
+        svgContainer = technicalSkillsElement
+        SVGTitle = "technicalSkillsChart"
 
     } else if (dataName == "technologiesData") {
-        svgParentContainer = document.querySelector('.technologies');
-        bottomPosition = svgParentContainer.getBoundingClientRect().bottom;
-        svg = document.querySelector(".technologiesChart")
-        containerWidth = (window.innerWidth * 0.75);
+        svgContainer = document.querySelector(".technologies");
+        SVGTitle = "technologiesChart"
     }
 
-    const height = 200;
-
-    // Calculate bar width based on data length
+    const chartHeight = 400;
+    const chartWidth = containerWidth
     const barWidth = 40;
+    const maxValue = 100;
 
-    // Calculate the maximum value for scaling
-    const maxValue = Math.max(...data.values);
+    // Create SVG element
+    const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgElement.setAttribute("height", chartHeight);
+    svgElement.setAttribute("width", chartWidth);
 
+
+    const titleElement = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    titleElement.textContent = SVGTitle
+
+    svgElement.appendChild(titleElement);
+
+
+    // Append SVG to parent container
+    svgContainer.appendChild(svgElement);
 
     // Create bars
     for (let i = 0; i < data.labels.length; i++) {
-        // Calculate the adjusted x position for centering
-        const x = (containerWidth - (barWidth * data.labels.length/2)) + (i * barWidth);
 
-        // Use document.createElement to create HTML elements
-        const rect = document.createElement('div');
-        rect.style.position = 'absolute';
-        rect.style.left = x + 'px';
-        rect.style.bottom = '100px';
-        rect.style.width = barWidth + 'px';
-        rect.style.height = (data.values[i] / maxValue) * height + 'px';
-        rect.style.backgroundColor = '#01FF70';
+        const barHeight = (data.values[i] / maxValue) * chartHeight;
 
-        svg.appendChild(rect);
+        const x = (i * barWidth);
+        const y = ((chartHeight * 0.75) - barHeight);
+
+        // Create rect element
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", x);
+        rect.setAttribute("y", y);
+        rect.setAttribute("width", barWidth);
+        rect.setAttribute("height", barHeight);
+        rect.setAttribute("fill", '#01FF70');
+        svgElement.appendChild(rect);
+
+        // Add values inside the bars
+        const values = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        values.setAttribute("x", x + barWidth / 2);
+        values.setAttribute("y", y - 15); // Adjust the y position for values
+        values.setAttribute("text-anchor", "middle");
+        values.textContent = data.values[i] + '%';
+        svgElement.appendChild(values);
 
         // Add labels inside the bars
-        const label = document.createElement('div');
-        label.style.position = 'absolute';
-        label.style.left = '25%';
-        label.style.top = '100%';
-        label.style.transform = 'translate(-50%, 50%) rotate(-45deg)'; // Rotate the text vertically and center it
-        label.style.transformOrigin = 'bottom center'; // Set the rotation origin
-        label.style.textAlign = 'center';
-        label.style.whiteSpace = 'nowrap';
-        label.textContent = data.labels[i]
-        // + ":" + data.values[i];
-        rect.appendChild(label);
-
-        const values = document.createElement('div');
-        values.classList.add("graphValues")
-        values.style.position = 'absolute';
-        values.style.left = '10%';
-        values.style.bottom = '110%';
-        values.style.transformOrigin = 'bottom center'; // Set the rotation origin
-        values.style.textAlign = 'center';
-        values.textContent = data.values[i] + '%'
-      
-        rect.appendChild(values);
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", x + barWidth / 2);
+        label.setAttribute("y", y + barHeight + 15); // Adjust the y position for labels
+        label.setAttribute("text-anchor", "end");
+        label.setAttribute("transform", `rotate(-45 ${x + barWidth / 2} ${y + barHeight + 15})`);
+        label.textContent = data.labels[i];
+        svgElement.appendChild(label);
     }
+
+
+
 }
+
 
 

@@ -29,6 +29,7 @@ export async function createHTMLElements() {
 // adds a logout button to the.... 
 function addLogoutButtonToContainer(container) {
     const logoutButton = document.createElement("button");
+    
     logoutButton.classList.add("logoutButton");
     logoutButton.innerText = "logout";
     logoutButton.addEventListener("click", function () {
@@ -43,15 +44,15 @@ function createBarChartsDivs(skillsDiv) {
     technicalSkillsDiv.classList.add("technicalSkills")
     skillsDiv.appendChild(technicalSkillsDiv)
 
-    const technicalSkillsChart = document.createElement("svg")
-    technicalSkillsChart.classList.add("technicalSkillsChart")
-    technicalSkillsDiv.appendChild(technicalSkillsChart)
+    // const technicalSkillsChart = document.createElement("svg")
+    // technicalSkillsChart.classList.add("technicalSkillsChart")
+    // technicalSkillsDiv.appendChild(technicalSkillsChart)
 
     const technologiesDiv = document.createElement("div")
     technologiesDiv.classList.add("technologies")
     skillsDiv.appendChild(technologiesDiv)
 
-    const technologiesChart = document.createElement("svg")
-    technologiesChart.classList.add("technologiesChart")
-    technologiesDiv.appendChild(technologiesChart)
+//     const technologiesChart = document.createElement("svg")
+//     technologiesChart.classList.add("technologiesChart")
+//     technologiesDiv.appendChild(technologiesChart)
 }
