@@ -12,6 +12,6 @@ export async function getLevel(levelQuery) {
     })
     //Level
     const levelDiv = document.querySelector(".level");
-    levelDiv.innerHTML = `Level: <span style="color: #01FF70;">${level}</span>`;
+    levelDiv.innerHTML = `Level:   <span style="color: #01FF70;">${level}</span>`;
 
 }

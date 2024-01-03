@@ -126,6 +126,10 @@ function createBarChart(skillAmounts, dataName) {
         rect.setAttribute("width", barWidth);
         rect.setAttribute("height", barHeight);
         rect.setAttribute("fill", '#01FF70');
+
+        rect.setAttribute("stroke", "black");
+rect.setAttribute("stroke-width", "1");
+
         svgElement.appendChild(rect);
 
         // Add values inside the bars
