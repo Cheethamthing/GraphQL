@@ -18,5 +18,6 @@ export async function getAuditRatio(queryStringUp, queryStringDown) {
     //Audit ratio
     const auditRatioDiv = document.querySelector(".auditRatio");
 
-    auditRatioDiv.textContent = "Audit Ratio:" + " " + (auditUpXp / auditDownXp).toFixed(1)
+    auditRatioDiv.innerHTML = `Audit Ratio: <span style="color: #01FF70;">${(auditUpXp / auditDownXp).toFixed(1)}</span>`;
+
 }

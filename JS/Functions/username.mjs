@@ -7,6 +7,6 @@ export async function getUsername(usernameQuery) {
 
     const usernameDiv = document.querySelector(".username");
     if (usernameDiv) {
-        usernameDiv.textContent = `Username: ${username}`;
+        usernameDiv.innerHTML = `Username: <span style="color: #01FF70;">${username}</span>`;
     }
 }

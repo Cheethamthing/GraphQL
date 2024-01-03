@@ -130,6 +130,7 @@ function createBarChart(skillAmounts, dataName) {
 
         // Add values inside the bars
         const values = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        values.setAttribute("fill", 'white');
         values.setAttribute("x", x + barWidth / 2);
         values.setAttribute("y", y - 15); // Adjust the y position for values
         values.setAttribute("text-anchor", "middle");
@@ -138,6 +139,7 @@ function createBarChart(skillAmounts, dataName) {
 
         // Add labels inside the bars
         const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("fill", 'white');
         label.setAttribute("x", x + barWidth / 2);
         label.setAttribute("y", y + barHeight + 15); // Adjust the y position for labels
         label.setAttribute("text-anchor", "end");
