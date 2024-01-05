@@ -116,7 +116,7 @@ function createBarChart(skillAmounts, dataName) {
 
         const barHeight = (data.values[i] / maxValue) * chartHeight;
 
-        const x = (i * barWidth) + (chartWidth / 2 - (data.labels.length * barWidth) / 2) ;
+        const x = (i * barWidth) + (chartWidth / 2 - (data.labels.length * barWidth) / 2);
         const y = ((chartHeight * 0.75) - barHeight);
 
         // Create rect element
@@ -126,9 +126,8 @@ function createBarChart(skillAmounts, dataName) {
         rect.setAttribute("width", barWidth);
         rect.setAttribute("height", barHeight);
         rect.setAttribute("fill", '#01FF70');
-
         rect.setAttribute("stroke", "black");
-rect.setAttribute("stroke-width", "1");
+        rect.setAttribute("stroke-width", "1");
 
         svgElement.appendChild(rect);
 
