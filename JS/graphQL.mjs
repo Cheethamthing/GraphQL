@@ -7,9 +7,8 @@ import { getSkills } from "./Functions/skills.mjs";
 import { usernameQuery, auditUpQuery, auditDownQuery, levelQuery, skillsQuery, transactionQuery } from "./Functions/queries.mjs";
 
 
-const responseDataDiv = document.getElementById('response-data');
+const errorDiv = document.getElementById('errorsGoHere');
 // Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
-let justXp = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
@@ -56,7 +55,7 @@ async function handleLogin() {
             await getSkills(skillsQuery)
         } else {
             // Display an error message or handle unsuccessful login
-            responseDataDiv.textContent = "It didn't work!!"
+            errorDiv.textContent = "Failed to sign in.  Hopefully you're the problem here"
             console.error("Error during login:", response.statusText);
         }
     } catch (error) {
