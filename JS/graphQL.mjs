@@ -54,7 +54,6 @@ async function handleLogin() {
             await getLevel(levelQuery)
             // simple query
             await getSkills(skillsQuery)
-            // await processTransactions(transactionQuery)
         } else {
             // Display an error message or handle unsuccessful login
             responseDataDiv.textContent = "It didn't work!!"
@@ -63,50 +62,5 @@ async function handleLogin() {
     } catch (error) {
         console.error("Error during login:", error);
     }
-}
-
-async function processTransactions(transactionQuery) {
-
-    const responseData = await UseJWT(transactionQuery)
-
-    responseData.data.transaction.forEach(transaction => {
-        const transactionsElement = document.createElement("div");
-
-        const transactionIdElement = document.createElement("span");
-        transactionIdElement.textContent = "Transaction ID: " + transaction.id;
-        transactionsElement.appendChild(transactionIdElement);
-
-        const transactionsTypeElement = document.createElement("span");
-        transactionsTypeElement.textContent = " Transaction Type: " + transaction.type;
-        transactionsElement.appendChild(transactionsTypeElement);
-
-        const transactionsAmountElement = document.createElement("span");
-        transactionsAmountElement.textContent = " Transaction Amount: " + transaction.amount;
-        transactionsElement.appendChild(transactionsAmountElement);
-
-        const transactionsPathElement = document.createElement("span");
-        transactionsPathElement.textContent = " Transaction Path: " + transaction.path;
-        transactionsElement.appendChild(transactionsPathElement);
-
-        const transactionsDiv = document.getElementsByClassName("transactions")[0]
-        transactionsDiv.appendChild(transactionsElement);
-
-        
-
-        if (transaction.type == "xp") {
-            justXp += Number(transaction.amount)
-        }
-    }
-    );
-
-
-    
-
-
-
-
-    // Update the content of the response-data div
-    responseDataDiv.textContent = JSON.stringify(responseData, null, 2);
-
 }
 

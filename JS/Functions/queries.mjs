@@ -65,38 +65,3 @@ export const levelQuery =
         }
       }   
 `
-
-
-export const transactionQuery = `
-            query {
-                user {
-                    id
-                    login
-                }
-                transaction {
-                    id
-                    type
-                    amount
-                    userId
-                    path
-                }
-                progress {
-                    id
-                    userId
-                    objectId
-                    grade
-                }
-                result {
-                    id
-                    objectId
-                    userId
-                    grade
-                }
-                object {
-                    id
-                    name
-                    type
-                    attrs
-                }
-            }
-        `
