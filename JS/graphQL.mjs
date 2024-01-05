@@ -1,10 +1,9 @@
 import { createHTMLElements } from "./Functions/HTMLElements.mjs";
-import { UseJWT } from "./Functions/useJWT.mjs";
 import { getUsername } from "./Functions/username.mjs";
 import { getAuditRatio } from "./Functions/auditRatio.mjs";
 import { getLevel } from "./Functions/level.mjs";
 import { getSkills } from "./Functions/skills.mjs";
-import { usernameQuery, auditUpQuery, auditDownQuery, levelQuery, skillsQuery, transactionQuery } from "./Functions/queries.mjs";
+import { usernameQuery, auditUpQuery, auditDownQuery, levelQuery, skillsQuery} from "./Functions/queries.mjs";
 
 
 const errorDiv = document.getElementById('errorsGoHere');
@@ -55,7 +54,7 @@ async function handleLogin() {
             await getSkills(skillsQuery)
         } else {
             // Display an error message or handle unsuccessful login
-            errorDiv.textContent = "Failed to sign in.  Hopefully you're the problem here"
+            errorDiv.textContent = `Failed to sign in. Hopefully you're the problem here`
             console.error("Error during login:", response.statusText);
         }
     } catch (error) {
