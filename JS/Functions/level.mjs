@@ -1,5 +1,7 @@
 import { UseJWT } from "./useJWT.mjs";
 
+// Doesn't work for every user; merely most..
+// Not sure why since I only have easy access to my own data
 export async function getLevel(levelQuery) {
     let level = 0;
     const responseData = await UseJWT(levelQuery)

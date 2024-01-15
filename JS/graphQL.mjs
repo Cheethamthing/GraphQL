@@ -1,13 +1,13 @@
 import { createHTMLElements } from "./Functions/HTMLElements.mjs";
 import { getUsername } from "./Functions/username.mjs";
 import { getAuditRatio } from "./Functions/auditRatio.mjs";
-import { getLevel } from "./Functions/level.mjs";
+// import { getLevel } from "./Functions/level.mjs";
 import { getSkills } from "./Functions/skills.mjs";
-import { usernameQuery, auditUpQuery, auditDownQuery, levelQuery, skillsQuery} from "./Functions/queries.mjs";
+import { getXP } from "./Functions/experience.mjs";
+import { usernameQuery, auditUpQuery, auditDownQuery, skillsQuery, xpQuery} from "./Functions/queries.mjs";
 
 
 const errorDiv = document.getElementById('errorsGoHere');
-// Gitea Access Token = 9fd40d4a6a1776854d2171f943ab2f254b8da113
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
@@ -40,6 +40,8 @@ async function handleLogin() {
         if (response.ok) {
 
             const jwtData = await response.json();
+
+            console.log("jwdata", jwtData)
             // Save the JWT to localStorage for future use
             localStorage.setItem("jwt", jwtData);
 
@@ -48,8 +50,8 @@ async function handleLogin() {
             await getUsername(usernameQuery)
             // arguments queries
             await getAuditRatio(auditUpQuery, auditDownQuery)
-            // simple query
-            await getLevel(levelQuery)
+            // argument query
+            await getXP(xpQuery)
             // simple query
             await getSkills(skillsQuery)
         } else {

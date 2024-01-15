@@ -53,21 +53,6 @@ function processTransactions(transactions) {
 
 }
 
-// writes out the skills and their numbers
-// function renderSkills(skillAmounts) {
-//     const skillsDiv = document.querySelector(".skills");
-
-//     for (const [skillType, transactionAmount] of skillAmounts) {
-//         // Create a div for each skillType and add the transaction amount to it
-//         const subDiv = document.createElement("div");
-//         subDiv.classList.add(skillType);
-//         subDiv.textContent = `Skill: ${skillType}: ${transactionAmount}`;
-//         skillsDiv.appendChild(subDiv);
-//     }
-
-
-// }
-
 function createBarChart(skillAmounts, dataName) {
 
     const technicalSkillsElement = document.querySelector('.technicalSkills');

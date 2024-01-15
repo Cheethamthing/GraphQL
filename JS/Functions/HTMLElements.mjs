@@ -16,9 +16,14 @@ export async function createHTMLElements() {
     auditRatioDiv.classList.add("auditRatio")
     loadedProfile.appendChild(auditRatioDiv)
 
-    const levelDiv = document.createElement("div")
-    levelDiv.classList.add("level")
-    loadedProfile.appendChild(levelDiv)
+    // Removed, didn't work on a level 9 account for some reason
+    // const levelDiv = document.createElement("div")
+    // levelDiv.classList.add("level")
+    // loadedProfile.appendChild(levelDiv)
+
+    const xpDiv = document.createElement("div")
+    xpDiv.classList.add("xp")
+    loadedProfile.appendChild(xpDiv)
 
     const skillsDiv = document.createElement("div");
     skillsDiv.classList.add("skills");

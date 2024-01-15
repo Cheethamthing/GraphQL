@@ -40,6 +40,7 @@ query {
 }
 `
 
+// simple query
 // Trying to limit query to just transactions that contain "skill_" was unsuccessful 
 export const skillsQuery =
     `
@@ -65,3 +66,14 @@ export const levelQuery =
         }
       }   
 `
+
+// argument query
+export const xpQuery =  `query{
+  transaction(where: {_and: [
+      {path: {_like: "%div-01%"}},
+      {path: {_nlike: "%div-01/piscine-js-up/%"}},
+  ],type :{_eq : "xp"}}){
+      amount
+      createdAt
+  }
+  } `;
